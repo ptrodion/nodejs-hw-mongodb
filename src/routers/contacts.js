@@ -1,5 +1,8 @@
 import { Router } from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { authenticate } from '../middlewares/authenticate.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { isValidID } from '../middlewares/isValidId.js';
 
 import {
   getAllContactsController,
@@ -9,15 +12,14 @@ import {
   deleteContactController,
 } from '../controllers/contacts.js';
 
-import { validateBody } from '../middlewares/validateBody.js';
-import { isValidID } from '../middlewares/isValidId.js';
-
 import {
   createContactsSchema,
   updateContactsSchema,
 } from '../validation/contacts.js';
 
 const contactsRouter = Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get('/', ctrlWrapper(getAllContactsController));
 
