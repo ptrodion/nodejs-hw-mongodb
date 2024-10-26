@@ -1,13 +1,10 @@
 import createHttpError from 'http-errors';
 
 export function validateBody(schema) {
-  return (req, res, next) => {
+  return (req, _res, next) => {
     const { error } = schema.validate(req.body, { abortEarly: false });
-    console.log('TYTY', typeof error);
 
     if (typeof error !== 'undefined') {
-      console.log(error.details);
-
       return next(
         createHttpError(
           400,
@@ -15,7 +12,6 @@ export function validateBody(schema) {
         ),
       );
     }
-
     next();
   };
 }
