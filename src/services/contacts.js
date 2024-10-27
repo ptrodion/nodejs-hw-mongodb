@@ -42,20 +42,22 @@ export const getAllContacts = async (
   };
 };
 
-export const getOneContact = async (id) => {
-  return await ContactCollection.findById(id);
+export const getOneContact = async (id, userId) => {
+  return await ContactCollection.findOne({ _id: id, userId });
 };
 
 export const createContact = async (payload) => {
   return await ContactCollection.create(payload);
 };
 
-export const updateContact = async (id, payload) => {
-  return await ContactCollection.findByIdAndUpdate(id, payload, {
-    new: true,
-  });
+export const updateContact = async (id, userId, payload) => {
+  return await ContactCollection.findOneAndUpdate(
+    { _id: id, userId },
+    payload,
+    { new: true },
+  );
 };
 
-export const deleteContact = async (id) => {
-  return await ContactCollection.findOneAndDelete({ _id: id });
+export const deleteContact = async (id, userId) => {
+  return await ContactCollection.findOneAndDelete({ _id: id, userId });
 };
