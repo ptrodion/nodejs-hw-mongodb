@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import pino from 'pino-http';
 import cors from 'cors';
+import { UPLOAD_DIR } from './constants/index.js';
 import { env } from './utils/env.js';
 import contactsRouter from './routers/contacts.js';
 import userRouter from './routers/auth.js';
@@ -22,6 +23,8 @@ export const setupServer = () => {
       },
     }),
   );
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.use('/contacts', contactsRouter);
   app.use('/auth', userRouter);
