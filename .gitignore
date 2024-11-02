@@ -6,6 +6,6 @@
 .DS_Store
 .idea
 
-src/tmp/*
-src/public/uploads/*
+# src/tmp/*
+# src/public/uploads/*
 
