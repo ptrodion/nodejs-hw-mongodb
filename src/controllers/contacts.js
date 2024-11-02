@@ -11,6 +11,9 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
 
 export const getAllContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -56,6 +59,21 @@ export const getOneContactByIdController = async (req, res, next) => {
 };
 
 export const createContactController = async (req, res) => {
+  console.log('object,', req);
+  const photo = req.file;
+
+  console.log(photo);
+
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo.filename);
+    }
+  }
+
   const contact = {
     name: req.body.name,
     phoneNumber: req.body.phoneNumber,
@@ -63,6 +81,7 @@ export const createContactController = async (req, res) => {
     isFavourite: req.body.isFavourite,
     contactType: req.body.contactType,
     userId: req.user.id,
+    photo: photoUrl,
   };
 
   const createdContact = await createContact(contact);
@@ -76,15 +95,8 @@ export const createContactController = async (req, res) => {
 
 export const updateContactController = async (req, res) => {
   const { id } = req.params;
-  const { userId } = req.user.id;
-
-  const contactUpdate = {
-    name: req.body.name,
-    phoneNumber: req.body.phoneNumber,
-    email: req.body.email,
-    isFavourite: req.body.isFavourite,
-    contactType: req.body.contactType,
-  };
+  const userId = req.user.id;
+  const photo = req.file;
 
   const contact = await getOneContact(id, userId);
 
@@ -95,6 +107,25 @@ export const updateContactController = async (req, res) => {
   if (contact.userId.toString() !== req.user.id.toString()) {
     return next(new createHttpError.NotFound('Contact not found'));
   }
+
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo.filename);
+    }
+  }
+
+  const contactUpdate = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    isFavourite: req.body.isFavourite,
+    contactType: req.body.contactType,
+    photo: photoUrl || contact.photo,
+  };
 
   const updatedContact = await updateContact(id, userId, contactUpdate);
 
