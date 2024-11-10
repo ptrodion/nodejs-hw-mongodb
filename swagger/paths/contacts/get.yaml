@@ -9,14 +9,14 @@ parameters:
   - in: query
     name: page
     description: 'Page number for pagination'
-    required: true
+    required: false
     schema:
       type: integer
       example: 1
   - in: query
     name: perPage
     description: 'Number of contacts per page'
-    required: true
+    required: false
     schema:
       type: integer
       example: 10
@@ -33,13 +33,6 @@ parameters:
       type: string
       enum: ['asc', 'desc']
       example: 'asc'
-  - in: query
-    name: contactType
-    description: 'Filter contacts by their type'
-    schema:
-      type: string
-      enum: ['work', 'home', 'personal']
-      example: 'personal'
   - in: query
     name: isFavourite
     description: 'Filter contacts based on their favorite status'

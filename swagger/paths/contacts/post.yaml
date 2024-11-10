@@ -11,13 +11,7 @@ requestBody:
       schema:
         type: object
         required:
-          - name
-          - phoneNumber
-          - email
-          - isFavourite
-          - contactType
-          - userId
-          - photo
+          - _id
         properties:
           name:
             description: "Contact's name"
@@ -41,14 +35,10 @@ requestBody:
             type: string
             enum: ['work', 'home', 'personal']
             example: personal
-          userId:
-            description: "Contact's user id"
-            type: string
-            example: 6727a753d4aae8a1423f4213
           photo:
             description: "Student's photo"
             type: string
-            format: file
+            format: binary
 responses:
   '201':
     description: Contact successfully created
