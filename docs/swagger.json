@@ -12,6 +12,9 @@
   "servers": [
     {
       "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://nodejs-hw-mongodb-t3ux.onrender.com"
     }
   ],
   "tags": [
@@ -39,7 +42,7 @@
             "in": "query",
             "name": "page",
             "description": "Page number for pagination",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "integer",
               "example": 1
@@ -49,7 +52,7 @@
             "in": "query",
             "name": "perPage",
             "description": "Number of contacts per page",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "integer",
               "example": 10
@@ -75,20 +78,6 @@
                 "desc"
               ],
               "example": "asc"
-            }
-          },
-          {
-            "in": "query",
-            "name": "contactType",
-            "description": "Filter contacts by their type",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "work",
-                "home",
-                "personal"
-              ],
-              "example": "personal"
             }
           },
           {
@@ -197,13 +186,8 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "name",
-                  "phoneNumber",
-                  "email",
-                  "isFavourite",
-                  "contactType",
-                  "userId",
-                  "photo"
+                  "_id",
+                  "userId"
                 ],
                 "properties": {
                   "name": {
@@ -237,15 +221,10 @@
                     ],
                     "example": "personal"
                   },
-                  "userId": {
-                    "description": "Contact's user id",
-                    "type": "string",
-                    "example": "6727a753d4aae8a1423f4213"
-                  },
                   "photo": {
                     "description": "Student's photo",
                     "type": "string",
-                    "format": "file"
+                    "format": "binary"
                   }
                 }
               }

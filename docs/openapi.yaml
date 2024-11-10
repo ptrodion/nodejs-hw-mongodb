@@ -11,7 +11,7 @@ tags:
     description: Operations about contacts.
 servers:
   - url: http://localhost:3000
-  # - url: https://your-deployed-site-url.com # Замените на реальный URL
+  - url: https://nodejs-hw-mongodb-t3ux.onrender.com
 paths:
   /contacts:
     get:
