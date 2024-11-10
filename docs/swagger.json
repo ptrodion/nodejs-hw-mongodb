@@ -82,6 +82,20 @@
           },
           {
             "in": "query",
+            "name": "type",
+            "description": "Filter contacts by their type",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "work",
+                "home",
+                "personal"
+              ],
+              "example": "personal"
+            }
+          },
+          {
+            "in": "query",
             "name": "isFavourite",
             "description": "Filter contacts based on their favorite status",
             "schema": {
@@ -172,7 +186,7 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Create contact",
+        "summary": "Create a contact",
         "operationId": "createContact",
         "description": "Create a contact with payload",
         "security": [
@@ -186,43 +200,43 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "_id",
-                  "userId"
+                  "name",
+                  "phoneNumber",
+                  "contactType"
                 ],
                 "properties": {
                   "name": {
                     "description": "Contact's name",
                     "type": "string",
-                    "example": "Donald Black"
+                    "example": "John Doe"
                   },
                   "phoneNumber": {
                     "description": "Contact's phone number",
                     "type": "string",
-                    "example": "+35198778969"
+                    "example": "+1234567890"
                   },
                   "email": {
                     "description": "Contact's email",
                     "type": "string",
-                    "example": "example@gmail.com"
+                    "example": "johndoe@example.com"
                   },
                   "isFavourite": {
-                    "description": "This is a favorite contact",
+                    "description": "Whether the contact is a favorite",
                     "type": "boolean",
-                    "example": false,
-                    "default": false
+                    "example": false
                   },
                   "contactType": {
-                    "description": "Contact type",
+                    "description": "Contact's type",
                     "type": "string",
                     "enum": [
                       "work",
-                      "home",
-                      "personal"
+                      "personal",
+                      "home"
                     ],
-                    "example": "personal"
+                    "default": "personal"
                   },
                   "photo": {
-                    "description": "Student's photo",
+                    "description": "Contact's photo as a binary file",
                     "type": "string",
                     "format": "binary"
                   }
@@ -339,9 +353,9 @@
         "tags": [
           "Contacts"
         ],
-        "summary": "Update contact by id",
-        "operationId": "updateContact",
-        "description": "Partially update a contact by its unique identifier",
+        "summary": "Update or create a contact",
+        "operationId": "patchContact",
+        "description": "Update or create a contact with payload",
         "security": [
           {
             "bearerAuth": []
@@ -351,17 +365,42 @@
           {
             "in": "path",
             "name": "id",
-            "description": "The ID of the contact to update",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "6727a753d4aae8a1423f4213"
-            }
+              "type": "string"
+            },
+            "description": "The ID of the contact to update"
           }
         ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "userId",
+                  "photo"
+                ],
+                "properties": {
+                  "userId": {
+                    "description": "The user ID this contact belongs to",
+                    "type": "string",
+                    "format": "objectId",
+                    "example": "65ca67e7ae7f10c88b598384"
+                  },
+                  "photo": {
+                    "description": "Contact's photo as a binary file",
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "The fields to update in the contact",
+            "description": "Patch a contact",
             "content": {
               "application/json": {
                 "schema": {
@@ -378,9 +417,10 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Successfully found contacts!"
+                      "example": "Successfully patched a contact!"
                     },
                     "data": {
+                      "type": "object",
                       "$ref": "#/components/schemas/contact"
                     }
                   }
