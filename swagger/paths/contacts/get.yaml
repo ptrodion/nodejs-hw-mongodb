@@ -34,6 +34,13 @@ parameters:
       enum: ['asc', 'desc']
       example: 'asc'
   - in: query
+    name: type
+    description: 'Filter contacts by their type'
+    schema:
+      type: string
+      enum: ['work', 'home', 'personal']
+      example: 'personal'
+  - in: query
     name: isFavourite
     description: 'Filter contacts based on their favorite status'
     schema:
